@@ -1,0 +1,1866 @@
+{
+  "exercises": [
+    {
+      "id": "tp1-01",
+      "group": "tp1",
+      "number": "01",
+      "title": "Hechos, compañeros y rivales",
+      "topic": "Hechos y reglas",
+      "page": 1,
+      "source": "01p-prolog.pdf",
+      "statement": "Anticipá las seis consultas de la base de F1. Definí compañero_de_equipo/2, rival_sin_companero/2 y rival_con_companero/2. Usamos los datos del PDF como base del ejercicio.",
+      "solution": "equipo(colapinto, alpine).\nequipo(norris, mclaren). equipo(gasly, alpine).\nequipo(piastri, mclaren). equipo(perez, cadillac).\nequipo(russell, mercedes). equipo(bottas, cadillac).\nequipo(antonelli, mercedes). equipo(lawson, racingbulls).\nequipo(verstappen, redbull). equipo(lindblad, racingbulls).\nequipo(hadjar, redbull). equipo(hamilton, ferrari).\nequipo(leclerc, ferrari). equipo(alonso, astonmartin).\nequipo(stroll, astonmartin). equipo(alon, williams).\nequipo(sainz, williams). equipo(hulkenberg, audi).\nequipo(bortoleto, audi). equipo(ocon, haas). equipo(bearman, haas).\nmotor(mclaren, mercedes). motor(mercedes, mercedes).\nmotor(williams, mercedes). motor(alpine, mercedes).\nmotor(ferrari, ferrari). motor(haas, ferrari). motor(cadillac, ferrari).\nmotor(redbull, redbull). motor(racingbulls, redbull).\nmotor(astonmartin, honda). motor(audi, audi).\ncompanero_de_equipo(X,Y) :- equipo(X,E), equipo(Y,E), X \\= Y.\nrival_sin_companero(X,Y) :- equipo(X,E1), equipo(Y,E2), E1 \\= E2, X \\= Y.\nrival_con_companero(X,Y) :- equipo(X,_), equipo(Y,_), X \\= Y.\n% También funciona el nombre con ñ del enunciado:\ncompañero_de_equipo(X,Y) :- companero_de_equipo(X,Y).\n",
+      "queries": [
+        "equipo(colapinto,alpine).",
+        "equipo(colapinto,ferrari).",
+        "equipo(colapinto,X).",
+        "equipo(X,ferrari).",
+        "equipo(X,Y), motor(Y,mercedes).",
+        "motor(alpine,X), motor(williams,X).",
+        "companero_de_equipo(colapinto,Y).",
+        "rival_sin_companero(colapinto,Y).",
+        "rival_con_companero(colapinto,Y)."
+      ],
+      "explanation": [
+        "Las respuestas de (a) son: true; false; X=alpine; X=hamilton y X=leclerc; los ocho pilotos de mclaren, mercedes, williams y alpine con su equipo; X=mercedes.",
+        "Compartir la variable E obliga a los dos pilotos a pertenecer a la misma escudería. La desigualdad se comprueba después de generar ambos nombres.",
+        "El compañero de Colapinto es gasly. Los rivales con compañero son los otros 21 pilotos; sin compañero son 20. Cada par se genera también en el orden inverso.",
+        "Conservamos alon, tal como está escrito en la guía; estos hechos son datos del práctico, no una verificación de la parrilla actual."
+      ],
+      "hints": [
+        "Compartí la variable de equipo entre las dos consultas.",
+        "Generá los pilotos antes de usar X \\= Y."
+      ],
+      "tests": [
+        {
+          "label": "Compañero de Colapinto",
+          "query": "findall(Y,companero_de_equipo(colapinto,Y),Ys), Ys == [gasly]."
+        },
+        {
+          "label": "Excluir a uno mismo",
+          "query": "\\+ companero_de_equipo(colapinto,colapinto)."
+        },
+        {
+          "label": "Rivales sin compañero",
+          "query": "findall(Y,rival_sin_companero(colapinto,Y),Ys), length(Ys,20)."
+        },
+        {
+          "label": "Rivales con compañero",
+          "query": "findall(Y,rival_con_companero(colapinto,Y),Ys), length(Ys,21)."
+        }
+      ],
+      "starter": "equipo(colapinto, alpine).\nequipo(norris, mclaren). equipo(gasly, alpine).\nequipo(piastri, mclaren). equipo(perez, cadillac).\nequipo(russell, mercedes). equipo(bottas, cadillac).\nequipo(antonelli, mercedes). equipo(lawson, racingbulls).\nequipo(verstappen, redbull). equipo(lindblad, racingbulls).\nequipo(hadjar, redbull). equipo(hamilton, ferrari).\nequipo(leclerc, ferrari). equipo(alonso, astonmartin).\nequipo(stroll, astonmartin). equipo(alon, williams).\nequipo(sainz, williams). equipo(hulkenberg, audi).\nequipo(bortoleto, audi). equipo(ocon, haas). equipo(bearman, haas).\nmotor(mclaren, mercedes). motor(mercedes, mercedes).\nmotor(williams, mercedes). motor(alpine, mercedes).\nmotor(ferrari, ferrari). motor(haas, ferrari). motor(cadillac, ferrari).\nmotor(redbull, redbull). motor(racingbulls, redbull).\nmotor(astonmartin, honda). motor(audi, audi).\n\n% Agregá las tres relaciones.\n",
+      "variants": []
+    },
+    {
+      "id": "tp1-02",
+      "group": "tp1",
+      "number": "02",
+      "title": "Estadísticas y variables anónimas",
+      "topic": "Aritmética",
+      "page": 2,
+      "source": "01p-prolog.pdf",
+      "statement": "Definí es_campeon_mundial/1 con variables anónimas, mas_experimentado/2 y mas_de_n_podios/2. Consultá quién tiene más de 10 podios y ningún campeonato.",
+      "solution": "piloto(fangio, mercedes, 51, 24, 35, 5).\npiloto(reutemann, williams, 146, 12, 45, 0).\npiloto(jose_froilan_gonzalez, ferrari, 26, 2, 15, 0).\npiloto(franco_colapinto, alpine, 39, 0, 0, 0).\npiloto(emerson_fittipaldi, lotus, 144, 14, 35, 2).\npiloto(nelson_piquet, brabham, 204, 23, 60, 3).\npiloto(ayrton_senna, mclaren, 161, 41, 80, 3).\npiloto(rubens_barrichello, ferrari, 326, 11, 68, 0).\npiloto(felipe_massa, ferrari, 272, 11, 41, 0).\nes_campeon_mundial(N) :- piloto(N,_,_,_,_,C), C > 0.\nmas_experimentado(P1,P2) :- piloto(P1,_,G1,_,_,_), piloto(P2,_,G2,_,_,_), G1 > G2.\nmas_de_n_podios(P,N) :- piloto(P,_,_,_,Podios,_), Podios > N.\n",
+      "queries": [
+        "es_campeon_mundial(N).",
+        "mas_experimentado(reutemann,fangio).",
+        "mas_de_n_podios(P,10), piloto(P,_,_,_,_,0)."
+      ],
+      "explanation": [
+        "Cada _ es una variable nueva: descarta un dato sin imponer igualdad con otros campos.",
+        "Los campeones son fangio, emerson_fittipaldi, nelson_piquet y ayrton_senna. Las estadísticas son las provistas por la guía.",
+        "La consulta combinada devuelve reutemann, jose_froilan_gonzalez, rubens_barrichello y felipe_massa. Las comparaciones aritméticas necesitan números ya ligados."
+      ],
+      "hints": [
+        "El campeonato está en el sexto argumento.",
+        "Usá > para comparar los Grandes Premios ya obtenidos."
+      ],
+      "tests": [
+        {
+          "label": "Campeones",
+          "query": "findall(N,es_campeon_mundial(N),Ns), Ns == [fangio,emerson_fittipaldi,nelson_piquet,ayrton_senna]."
+        },
+        {
+          "label": "Experiencia",
+          "query": "mas_experimentado(reutemann,fangio), \\+ mas_experimentado(fangio,reutemann)."
+        },
+        {
+          "label": "Podios estrictos",
+          "query": "mas_de_n_podios(fangio,34), \\+ mas_de_n_podios(fangio,35)."
+        }
+      ],
+      "starter": "piloto(fangio, mercedes, 51, 24, 35, 5).\npiloto(reutemann, williams, 146, 12, 45, 0).\npiloto(jose_froilan_gonzalez, ferrari, 26, 2, 15, 0).\npiloto(franco_colapinto, alpine, 39, 0, 0, 0).\npiloto(emerson_fittipaldi, lotus, 144, 14, 35, 2).\npiloto(nelson_piquet, brabham, 204, 23, 60, 3).\npiloto(ayrton_senna, mclaren, 161, 41, 80, 3).\npiloto(rubens_barrichello, ferrari, 326, 11, 68, 0).\npiloto(felipe_massa, ferrari, 272, 11, 41, 0).\n",
+      "variants": []
+    },
+    {
+      "id": "tp1-03",
+      "group": "tp1",
+      "number": "03",
+      "title": "El máximo de dos números",
+      "topic": "Aritmética",
+      "page": 2,
+      "source": "01p-prolog.pdf",
+      "statement": "Definí maximo(+X,+Y,?Z) sin corte. Debe funcionar también al comprobar un resultado dado.",
+      "solution": "maximo(X,Y,X) :- X >= Y.\nmaximo(X,Y,Y) :- X < Y.\n",
+      "queries": [
+        "maximo(2,3,X).",
+        "maximo(3,2,X).",
+        "maximo(3,3,X).",
+        "maximo(2,3,2)."
+      ],
+      "explanation": [
+        "Los casos X>=Y y X<Y son excluyentes. Con X=Y obtenemos una sola solución.",
+        "Poner el resultado en la cabeza expresa la relación sin una asignación. X e Y son entradas numéricas."
+      ],
+      "hints": [
+        "Usá dos reglas con condiciones complementarias."
+      ],
+      "tests": [
+        {
+          "label": "Orden ascendente",
+          "query": "findall(Z,maximo(2,3,Z),Zs), Zs == [3]."
+        },
+        {
+          "label": "Empate sin duplicados",
+          "query": "findall(Z,maximo(3,3,Z),Zs), Zs == [3]."
+        },
+        {
+          "label": "Resultado incorrecto",
+          "query": "\\+ maximo(2,3,2)."
+        },
+        {
+          "label": "Negativos",
+          "query": "maximo(-5,-2,-2)."
+        }
+      ],
+      "starter": "% El máximo de dos números\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "tp1-04",
+      "group": "tp1",
+      "number": "04",
+      "title": "El primer elemento",
+      "topic": "Unificación",
+      "page": 2,
+      "source": "01p-prolog.pdf",
+      "statement": "Definí primero(?L,?X) y resolvé las tres consultas con variables en la lista.",
+      "solution": "primero([X|_],X).\n",
+      "queries": [
+        "primero([a,b,c],X).",
+        "primero([X,b,c],a).",
+        "primero([X,Y],a).",
+        "primero(X,a)."
+      ],
+      "explanation": [
+        "[X|_] separa cabeza y cola. La misma X en ambos argumentos obliga a que coincidan.",
+        "Las respuestas son X=a; X=a con Y libre; X=[a|Cola] con Cola libre. Una lista abierta no equivale a [a]."
+      ],
+      "hints": [
+        "La cabeza de una lista tiene la forma [Cabeza|Cola]."
+      ],
+      "tests": [
+        {
+          "label": "Cabeza",
+          "query": "primero([a,b,c],a)."
+        },
+        {
+          "label": "Lista vacía",
+          "query": "\\+ primero([],a)."
+        },
+        {
+          "label": "Modo inverso",
+          "query": "primero(L,a), L = [a,b,c]."
+        }
+      ],
+      "starter": "% El primer elemento\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "tp1-05",
+      "group": "tp1",
+      "number": "05",
+      "title": "La cola de una lista",
+      "topic": "Unificación",
+      "page": 2,
+      "source": "01p-prolog.pdf",
+      "statement": "Definí cola(?L1,?L2) y resolvé las consultas cola([a|L],[b,c]) y cola(L,[b,c]).",
+      "solution": "cola([_|T],T).\n",
+      "queries": [
+        "cola([a,b,c],L).",
+        "cola([a|L],[b,c]).",
+        "cola(L,[b,c])."
+      ],
+      "explanation": [
+        "Descartamos la cabeza y compartimos la cola. En la primera consulta L=[b,c]; en la segunda L=[Cabeza,b,c], con Cabeza libre."
+      ],
+      "hints": [
+        "Compartí la cola entre ambos argumentos."
+      ],
+      "tests": [
+        {
+          "label": "Cola",
+          "query": "cola([a,b,c],[b,c])."
+        },
+        {
+          "label": "Vacía",
+          "query": "\\+ cola([],[])."
+        },
+        {
+          "label": "Un elemento",
+          "query": "cola([a],[])."
+        }
+      ],
+      "starter": "% La cola de una lista\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "tp1-06",
+      "group": "tp1",
+      "number": "06",
+      "title": "Construir una lista",
+      "topic": "Unificación",
+      "page": 3,
+      "source": "01p-prolog.pdf",
+      "statement": "Definí cons(?X,?L1,?L2) y obtené las cuatro respuestas del práctico.",
+      "solution": "cons(X,L,[X|L]).\n",
+      "queries": [
+        "cons(a,[b,c],L).",
+        "cons(X,[b,c],[a,b,c]).",
+        "cons(a,L,[a,b,c]).",
+        "cons(b,L,[a,b,c]).",
+        "cons(X,L,[a,b,c])."
+      ],
+      "explanation": [
+        "Las respuestas de (b) son: X=a; L=[b,c]; false; X=a y L=[b,c]. No se necesita recursión: toda la relación se resuelve por unificación."
+      ],
+      "hints": [
+        "Poné [X|L1] como tercer argumento."
+      ],
+      "tests": [
+        {
+          "label": "Construcción",
+          "query": "cons(a,[b,c],[a,b,c])."
+        },
+        {
+          "label": "Cabeza distinta",
+          "query": "\\+ cons(b,[b,c],[a,b,c])."
+        },
+        {
+          "label": "Vacía",
+          "query": "cons(a,[],[a])."
+        }
+      ],
+      "starter": "% Construir una lista\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "tp1-07",
+      "group": "tp1",
+      "number": "07",
+      "title": "Sumar una lista",
+      "topic": "Recursión",
+      "page": 3,
+      "source": "01p-prolog.pdf",
+      "statement": "Definí suma_lista(+L,?X). Observá qué queda pendiente al regresar de cada llamada.",
+      "solution": "suma_lista([],0).\nsuma_lista([X|Xs],S) :- suma_lista(Xs,R), S is X+R.\n",
+      "queries": [
+        "suma_lista([1,3,5],X).",
+        "suma_lista([],X).",
+        "suma_lista([2,-4,7],X)."
+      ],
+      "explanation": [
+        "La lista vacía suma 0. Primero se suma la cola y después se agrega la cabeza.",
+        "No es recursión de cola: S is X+R se ejecuta después de la llamada. Para [1,3,5], se vuelve con 0, 5, 8 y 9."
+      ],
+      "hints": [
+        "Elegí el elemento neutro como caso base.",
+        "Calculá la suma de la cola antes de usar is."
+      ],
+      "tests": [
+        {
+          "label": "Ejemplo",
+          "query": "suma_lista([1,3,5],9)."
+        },
+        {
+          "label": "Caso base",
+          "query": "suma_lista([],0)."
+        },
+        {
+          "label": "Negativos",
+          "query": "suma_lista([2,-4,7],5)."
+        },
+        {
+          "label": "Verificación falsa",
+          "query": "\\+ suma_lista([1,3,5],8)."
+        }
+      ],
+      "starter": "% Sumar una lista\n% Escribí tus hechos y reglas acá.\n",
+      "variants": [
+        {
+          "label": "Con acumulador",
+          "code": "suma_lista(L,S) :- suma_acc(L,0,S).\nsuma_acc([],A,A).\nsuma_acc([X|Xs],A,S) :- A1 is A+X, suma_acc(Xs,A1,S).\n"
+        }
+      ]
+    },
+    {
+      "id": "tp1-08",
+      "group": "tp1",
+      "number": "08",
+      "title": "Pertenencia y backtracking",
+      "topic": "Backtracking",
+      "page": 3,
+      "source": "01p-prolog.pdf",
+      "statement": "Definí pertenece/2, trazá pertenece(b,[a,b,c]) y formulá las tres consultas del apartado (c).",
+      "solution": "pertenece(X,[X|_]).\npertenece(X,[_|Xs]) :- pertenece(X,Xs).\n",
+      "queries": [
+        "pertenece(b,[a,b,c]).",
+        "pertenece(d,[a,b,c]).",
+        "pertenece(c,[a,c,b,c]).",
+        "pertenece(X,[a,b,a]).",
+        "pertenece(X,[a,b,c]), pertenece(X,[d,c,b])."
+      ],
+      "explanation": [
+        "Para pertenece(b,[a,b,c]), la primera cabeza no unifica con b; la segunda regla llama a pertenece(b,[b,c]), donde la primera regla tiene éxito.",
+        "Las consultas de (c) están disponibles arriba: c aparece dos veces; los elementos de [a,b,a] se generan a,b,a; los comunes se generan b,c. Prolog conserva duplicados.",
+        "La llamada recursiva es el último objetivo, por lo que esta definición ya es de cola. Eso no implica que todas sus consultas sean deterministas."
+      ],
+      "hints": [
+        "Un caso encuentra el elemento en la cabeza; el otro lo busca en la cola."
+      ],
+      "tests": [
+        {
+          "label": "Orden y duplicados",
+          "query": "findall(X,pertenece(X,[a,b,a]),Xs), Xs == [a,b,a]."
+        },
+        {
+          "label": "Ausente",
+          "query": "\\+ pertenece(d,[a,b,c])."
+        },
+        {
+          "label": "Vacía",
+          "query": "\\+ pertenece(a,[])."
+        },
+        {
+          "label": "Intersección",
+          "query": "findall(X,(pertenece(X,[a,b,c]),pertenece(X,[d,c,b])),Xs), Xs == [b,c]."
+        }
+      ],
+      "starter": "% Pertenencia y backtracking\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "tp1-09",
+      "group": "tp1",
+      "number": "09",
+      "title": "Concatenación en varios sentidos",
+      "topic": "Listas",
+      "page": 3,
+      "source": "01p-prolog.pdf",
+      "statement": "Definí conc/3, construí su árbol y respondé las seis preguntas: completar, partir, pertenencia, dos sublistas y último elemento.",
+      "solution": "conc([],L,L).\nconc([X|Xs],L,[X|Rs]) :- conc(Xs,L,Rs).\nsublista(S,L) :- conc(_,R,L), conc(S,_,R).\nultimo(L,X) :- conc(_,[X],L).\n",
+      "queries": [
+        "conc([a,b],[c,d,e],L).",
+        "conc([a,b],X,[a,b,c,d]).",
+        "conc(A,B,[a,b]).",
+        "conc(_,[b|_],[a,b,c]).",
+        "sublista([b,c],[a,b,c,d]).",
+        "sublista([b,d],[a,b,c,d]).",
+        "ultimo([b,a,c,d],X)."
+      ],
+      "explanation": [
+        "Al concatenar una lista vacía, el resultado es la segunda lista. La regla recursiva conserva la cabeza y concatena las colas.",
+        "Las respuestas de (c) son [c,d]; las particiones ([],[a,b]), ([a],[b]), ([a,b],[]); true; true; false; d.",
+        "Sublista significa un bloque contiguo. [b,d] no es una sublista de [a,b,c,d]. Esta definición de conc ya es de cola y es relacional."
+      ],
+      "hints": [
+        "Compartí la cabeza de L1 y L3.",
+        "Una sublista es el prefijo de algún sufijo."
+      ],
+      "tests": [
+        {
+          "label": "Concatenar",
+          "query": "conc([a,b],[c,d,e],[a,b,c,d,e])."
+        },
+        {
+          "label": "Tres particiones",
+          "query": "findall(A-B,conc(A,B,[a,b]),Ps), Ps == [[]-[a,b],[a]-[b],[a,b]-[]]."
+        },
+        {
+          "label": "Contigua",
+          "query": "sublista([b,c],[a,b,c,d]), \\+ sublista([b,d],[a,b,c,d])."
+        },
+        {
+          "label": "Último",
+          "query": "ultimo([b,a,c,d],d)."
+        }
+      ],
+      "starter": "% Concatenación en varios sentidos\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "tp1-10",
+      "group": "tp1",
+      "number": "10",
+      "title": "Palíndromos",
+      "topic": "Recursión",
+      "page": 4,
+      "source": "01p-prolog.pdf",
+      "statement": "Definí palindromo(+L). Construí el árbol para [o,s,o] y [o,s,a].",
+      "solution": "conc([],L,L).\nconc([X|Xs],L,[X|Rs]) :- conc(Xs,L,Rs).\ninvertir([],[]).\ninvertir([X|Xs],R) :- invertir(Xs,T), conc(T,[X],R).\npalindromo(L) :- invertir(L,L).\n",
+      "queries": [
+        "palindromo([o,s,o]).",
+        "palindromo([o,s,a]).",
+        "palindromo([]).",
+        "palindromo([a,b,b,a])."
+      ],
+      "explanation": [
+        "Una lista es palíndroma si coincide con su inversa. La lista vacía y la de un elemento también cumplen.",
+        "El árbol desarrolla primero invertir/2 y conc/3. Para [o,s,o], la inversa unifica; para [o,s,a], la coincidencia falla.",
+        "palindromo/1 no se llama a sí mismo: usa un auxiliar recursivo. En esta versión el auxiliar no es de cola y tarda O(n²); con acumulador tarda O(n) para listas propias de entrada."
+      ],
+      "hints": [
+        "Compará una lista con su inversa."
+      ],
+      "tests": [
+        {
+          "label": "Positivo",
+          "query": "palindromo([o,s,o])."
+        },
+        {
+          "label": "Negativo",
+          "query": "\\+ palindromo([o,s,a])."
+        },
+        {
+          "label": "Pares",
+          "query": "palindromo([a,b,b,a])."
+        },
+        {
+          "label": "Vacía",
+          "query": "palindromo([])."
+        }
+      ],
+      "starter": "% Palíndromos\n% Escribí tus hechos y reglas acá.\n",
+      "variants": [
+        {
+          "label": "Inversa con acumulador",
+          "code": "invertir(L,R) :- invertir_acc(L,[],R).\ninvertir_acc([],A,A).\ninvertir_acc([X|Xs],A,R) :- invertir_acc(Xs,[X|A],R).\npalindromo(L) :- invertir(L,L).\n"
+        }
+      ]
+    },
+    {
+      "id": "tp1-11",
+      "group": "tp1",
+      "number": "11",
+      "title": "Duplicar cada elemento",
+      "topic": "Listas",
+      "page": 4,
+      "source": "01p-prolog.pdf",
+      "statement": "Definí duplica(?L1,?L2) y trazá duplica([1,2,3],L).",
+      "solution": "duplica([],[]).\nduplica([X|Xs],[X,X|Rs]) :- duplica(Xs,Rs).\n",
+      "queries": [
+        "duplica([1,2,3],L).",
+        "duplica(L,[a,a,b,b]).",
+        "duplica([],L)."
+      ],
+      "explanation": [
+        "Por cada cabeza X construimos dos copias y seguimos con las colas.",
+        "La salida se construye en la cabeza de la regla: no queda trabajo después de la llamada, así que ya es de cola. También permite recuperar la entrada de una salida válida."
+      ],
+      "hints": [
+        "Usá [X,X|Rs] en el segundo argumento."
+      ],
+      "tests": [
+        {
+          "label": "Duplicar",
+          "query": "duplica([1,2,3],[1,1,2,2,3,3])."
+        },
+        {
+          "label": "Inverso",
+          "query": "duplica([a,b],[a,a,b,b])."
+        },
+        {
+          "label": "Base",
+          "query": "duplica([],[])."
+        },
+        {
+          "label": "Inválida",
+          "query": "\\+ duplica(_,[a,b])."
+        }
+      ],
+      "starter": "% Duplicar cada elemento\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "tp1-12",
+      "group": "tp1",
+      "number": "12",
+      "title": "Contar apariciones",
+      "topic": "Recursión",
+      "page": 4,
+      "source": "01p-prolog.pdf",
+      "statement": "Definí cuentaN(+L,+N,?LR), donde LR es una cantidad, no una lista.",
+      "solution": "cuentaN([],_,0).\ncuentaN([X|Xs],N,R) :- X = N, cuentaN(Xs,N,T), R is T+1.\ncuentaN([X|Xs],N,R) :- X \\= N, cuentaN(Xs,N,R).\n",
+      "queries": [
+        "cuentaN([1,2,1,2,1],1,3).",
+        "cuentaN([1,2,1,2,1],10,X).",
+        "cuentaN([1,2,1,2,1,1,1],1,X)."
+      ],
+      "explanation": [
+        "Los casos coincidente y distinto son excluyentes cuando L y N están ligados. Contamos un elemento solo si coincide.",
+        "La rama coincidente tiene una suma después de la recursión, así que no toda la definición es de cola. Las respuestas de los ejemplos son true, 0 y 5."
+      ],
+      "hints": [
+        "Separá los casos X=N y X distinto de N."
+      ],
+      "tests": [
+        {
+          "label": "Cuenta",
+          "query": "cuentaN([1,2,1,2,1],1,3)."
+        },
+        {
+          "label": "Ausente",
+          "query": "cuentaN([1,2,1],10,0)."
+        },
+        {
+          "label": "Base",
+          "query": "cuentaN([],1,0)."
+        },
+        {
+          "label": "Todas",
+          "query": "cuentaN([1,1,1],1,3)."
+        }
+      ],
+      "starter": "% Contar apariciones\n% Escribí tus hechos y reglas acá.\n",
+      "variants": [
+        {
+          "label": "Con acumulador",
+          "code": "cuentaN(L,N,R) :- cuenta_acc(L,N,0,R).\ncuenta_acc([],_,A,A).\ncuenta_acc([X|Xs],N,A,R) :-\n    ( X = N -> A1 is A+1 ; A1 = A ),\n    cuenta_acc(Xs,N,A1,R).\n"
+        }
+      ]
+    },
+    {
+      "id": "tp1-13",
+      "group": "tp1",
+      "number": "13",
+      "title": "Filtrar mayores que N",
+      "topic": "Listas",
+      "page": 4,
+      "source": "01p-prolog.pdf",
+      "statement": "Definí mayorN(+N,+L,?LR), conservando el orden original.",
+      "solution": "mayorN(_,[],[]).\nmayorN(N,[X|Xs],[X|Rs]) :- X > N, mayorN(N,Xs,Rs).\nmayorN(N,[X|Xs],Rs) :- X =< N, mayorN(N,Xs,Rs).\n",
+      "queries": [
+        "mayorN(3,[1,2,3,4,5,6],X).",
+        "mayorN(3,[],X).",
+        "mayorN(3,[1,2,3,4,5,6],[4,5,6])."
+      ],
+      "explanation": [
+        "La condición es estricta: 3 no entra en la salida cuando N=3. Los números menores o iguales se descartan.",
+        "Ambas ramas terminan en la llamada recursiva: construir [X|Rs] en la cabeza no impide la recursión de cola."
+      ],
+      "hints": [
+        "Construí salida solo en el caso X>N."
+      ],
+      "tests": [
+        {
+          "label": "Filtro",
+          "query": "mayorN(3,[1,2,3,4,5,6],[4,5,6])."
+        },
+        {
+          "label": "Base",
+          "query": "mayorN(3,[],[])."
+        },
+        {
+          "label": "Orden y duplicados",
+          "query": "mayorN(0,[2,-1,2,0,1],[2,2,1])."
+        },
+        {
+          "label": "Todos fuera",
+          "query": "mayorN(5,[1,2],[])."
+        }
+      ],
+      "starter": "% Filtrar mayores que N\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "tp1-14",
+      "group": "tp1",
+      "number": "14",
+      "title": "Familias y términos compuestos",
+      "topic": "Estructuras",
+      "page": 5,
+      "source": "01p-prolog.pdf",
+      "statement": "Compará familia(Padre,Madre,Hijos) con familia(ListaPersonas). Con la Estructura 1 resolvé I-IX: cantidad de hijos, padres, casadas, trabajadores, personas, sueldos y suma de sueldos.",
+      "solution": "familia(\n persona([tomas,garcia,perez],fecha(7,mayo,1960),trabajo(profesor,60)),\n persona([ana,lopez,ruiz],fecha(10,marzo,1962),trabajo(medica,90)),\n [persona([juan,garcia,lopez],fecha(5,enero,1990),estudiante),\n  persona([maria,garcia,lopez],fecha(12,abril,1992),estudiante)]).\nfamilia(\n persona([jose,perez,ruiz],fecha(6,marzo,1963),trabajo(pintor,120)),\n persona([luisa,galvez,perez],fecha(12,mayo,1964),trabajo(medica,90)),\n [persona([juan_luis,perez,perez],fecha(5,febrero,1990),estudiante),\n  persona([maria_jose,perez,perez],fecha(12,junio,1992),estudiante),\n  persona([jose_maria,perez,perez],fecha(12,julio,1994),estudiante)]).\ncasada(M) :- familia(_,M,_).\npersona(P) :- familia(P,_,_).\npersona(M) :- familia(_,M,_).\npersona(H) :- familia(_,_,Hs), member(H,Hs).\nsueldo(persona(_,_,trabajo(_,S)),S).\nsueldo(persona(_,_,estudiante),0).\ntotal([],0).\ntotal([P|Ps],S) :- sueldo(P,V), total(Ps,R), S is V+R.\n",
+      "queries": [
+        "familia(_,_,[]).",
+        "familia(_,_,[_]).",
+        "familia(_,_,[_,_]).",
+        "familia(_,_,[_,_,_]).",
+        "familia(_,_,[_,_,_,_]).",
+        "familia(persona(N,_,_),_,[_,_,_]).",
+        "casada(X).",
+        "casada(persona(N,_,trabajo(_,_))).",
+        "persona(persona(N,_,_)).",
+        "persona(P), sueldo(P,S).",
+        "familia(P,M,Hs), total([P,M|Hs],S)."
+      ],
+      "explanation": [
+        "Estructura 1: padre y madre tienen roles explícitos, las consultas son directas y los hijos pueden variar. Agregar otros roles exige cambiar la estructura. Estructura 2: una lista es uniforme y fácil de recorrer o ampliar, pero requiere una convención para distinguir roles; esa convención no está expresada en los argumentos.",
+        "I: no existen familias con 0, 1 o 4 hijos; sí existen con 2 y con 3. II: el padre de la familia con 3 hijos es [jose,perez,ruiz]. III-IV: casada/1 devuelve las personas Ana y Luisa.",
+        "V: [ana,lopez,ruiz] y [luisa,galvez,perez] trabajan. VI-VII: persona/1 enumera los 9 términos; persona(persona(N,_,_)) proyecta nombres y apellidos.",
+        "VIII: los salarios son 60, 90, 120 y 90 para los adultos; usamos 0 para estudiantes. IX: los totales diarios por familia son 150 y 210.",
+        "El texto inicial dice que Juan nació en 1980, pero el hecho del PDF dice 1990. Conservamos el hecho de la Estructura 1; las consultas pedidas no dependen del año. sueldo/2 recibe un término persona, como la lista de total/2."
+      ],
+      "hints": [
+        "Usá patrones de longitud fija para I.",
+        "Enumerá padre, madre e hijos en tres reglas de persona/1."
+      ],
+      "tests": [
+        {
+          "label": "Nueve personas",
+          "query": "findall(P,persona(P),Ps),length(Ps,9)."
+        },
+        {
+          "label": "Dos casadas",
+          "query": "findall(M,casada(M),Ms),length(Ms,2)."
+        },
+        {
+          "label": "Totales",
+          "query": "findall(S,(familia(P,M,H),total([P,M|H],S)),Ss),Ss == [150,210]."
+        },
+        {
+          "label": "Estudiante",
+          "query": "sueldo(persona([juan,garcia,lopez],fecha(5,enero,1990),estudiante),0)."
+        },
+        {
+          "label": "Sin hijos no existe",
+          "query": "\\+ familia(_,_,[])."
+        }
+      ],
+      "starter": "familia(\n persona([tomas,garcia,perez],fecha(7,mayo,1960),trabajo(profesor,60)),\n persona([ana,lopez,ruiz],fecha(10,marzo,1962),trabajo(medica,90)),\n [persona([juan,garcia,lopez],fecha(5,enero,1990),estudiante),\n  persona([maria,garcia,lopez],fecha(12,abril,1992),estudiante)]).\nfamilia(\n persona([jose,perez,ruiz],fecha(6,marzo,1963),trabajo(pintor,120)),\n persona([luisa,galvez,perez],fecha(12,mayo,1964),trabajo(medica,90)),\n [persona([juan_luis,perez,perez],fecha(5,febrero,1990),estudiante),\n  persona([maria_jose,perez,perez],fecha(12,junio,1992),estudiante),\n  persona([jose_maria,perez,perez],fecha(12,julio,1994),estudiante)]).\n",
+      "variants": []
+    },
+    {
+      "id": "tp2-01",
+      "group": "tp2",
+      "number": "01",
+      "title": "Invertir sin reverse/2",
+      "topic": "Recursión",
+      "page": 1,
+      "source": "02p-prolog.pdf",
+      "statement": "Definí invertir(?L1,?L2) sin usar reverse/2. Compará el costo de concatenar con el de un acumulador.",
+      "solution": "conc([],L,L).\nconc([X|Xs],L,[X|Rs]) :- conc(Xs,L,Rs).\ninvertir([],[]).\ninvertir([X|Xs],R) :- invertir(Xs,T), conc(T,[X],R).\n",
+      "queries": [
+        "invertir([a,b,c],R).",
+        "invertir([],R).",
+        "invertir([a,b,a],R)."
+      ],
+      "explanation": [
+        "Invertimos la cola y colocamos la cabeza al final. conc/3 recorre el resultado parcial en cada nivel: O(n²).",
+        "La versión con acumulador coloca cada elemento al principio de A y recorre una vez la entrada: O(n). Para consultas con entrada libre, el orden de búsqueda importa y algunas enumeraciones no terminan."
+      ],
+      "hints": [
+        "Empezá por la lista vacía.",
+        "Al volver, concatená [X] al final de la inversa de la cola."
+      ],
+      "tests": [
+        {
+          "label": "Inversión",
+          "query": "invertir([a,b,c],[c,b,a])."
+        },
+        {
+          "label": "Vacía",
+          "query": "invertir([],[])."
+        },
+        {
+          "label": "Una",
+          "query": "invertir([a],[a])."
+        },
+        {
+          "label": "Verificación",
+          "query": "\\+ invertir([a,b],[a,b])."
+        }
+      ],
+      "starter": "% Invertir sin reverse/2\n% Escribí tus hechos y reglas acá.\n",
+      "variants": [
+        {
+          "label": "Con acumulador",
+          "code": "invertir(L,R) :- invertir_acc(L,[],R).\ninvertir_acc([],A,A).\ninvertir_acc([X|Xs],A,R) :- invertir_acc(Xs,[X|A],R).\n"
+        }
+      ]
+    },
+    {
+      "id": "tp2-02",
+      "group": "tp2",
+      "number": "02",
+      "title": "Aplanar listas anidadas",
+      "topic": "Recursión",
+      "page": 1,
+      "source": "02p-prolog.pdf",
+      "statement": "Definí aplana(+ListaAnidada,-ListaPlana). El encabezado dice aplanac; se incluyen ambos nombres.",
+      "solution": "conc([],L,L).\nconc([X|Xs],L,[X|Rs]) :- conc(Xs,L,Rs).\naplana([],[]).\naplana([X|Xs],R) :- is_list(X), aplana(X,A), aplana(Xs,B), conc(A,B,R).\naplana([X|Xs],[X|R]) :- \\+ is_list(X), aplana(Xs,R).\naplanac(L,R) :- aplana(L,R).\n",
+      "queries": [
+        "aplana([a,[b,[c,d]],e],L).",
+        "aplana([[],[a,[]],b],L).",
+        "aplanac([a,[b]],L)."
+      ],
+      "explanation": [
+        "Si la cabeza es una lista, aplanamos cabeza y cola y concatenamos. Si no lo es, la conservamos.",
+        "Una lista vacía interna no es un elemento de la salida. Los casos is_list/1 y su negación son excluyentes para entradas propias y ligadas. No es totalmente de cola porque la rama anidada tiene trabajo después de una llamada."
+      ],
+      "hints": [
+        "Distinguí una cabeza que es lista de una que es elemento."
+      ],
+      "tests": [
+        {
+          "label": "Anidación",
+          "query": "aplana([a,[b,[c,d]],e],[a,b,c,d,e])."
+        },
+        {
+          "label": "Vacías internas",
+          "query": "aplana([[],[a,[]],b],[a,b])."
+        },
+        {
+          "label": "Base",
+          "query": "aplana([],[])."
+        },
+        {
+          "label": "Alias",
+          "query": "aplanac([[a],[b]],[a,b])."
+        }
+      ],
+      "starter": "% Aplanar listas anidadas\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "tp2-03",
+      "group": "tp2",
+      "number": "03",
+      "title": "Factorial",
+      "topic": "Recursión",
+      "page": 1,
+      "source": "02p-prolog.pdf",
+      "statement": "Definí factorial(+X,?Y) para enteros no negativos.",
+      "solution": "factorial(N,F) :- integer(N), N >= 0, fact(N,F).\nfact(0,1).\nfact(N,F) :- N > 0, N1 is N-1, fact(N1,R), F is N*R.\n",
+      "queries": [
+        "factorial(3,X).",
+        "factorial(0,X).",
+        "factorial(5,X).",
+        "factorial(-1,X)."
+      ],
+      "explanation": [
+        "0! vale 1. Para N>0 calculamos el factorial de N-1 y multiplicamos al regresar.",
+        "La multiplicación posterior hace que fact/2 no sea de cola. La versión alternativa guarda el producto en un acumulador iniciado en 1. Entradas negativas o no enteras fallan."
+      ],
+      "hints": [
+        "La identidad de multiplicación es 1."
+      ],
+      "tests": [
+        {
+          "label": "Tres",
+          "query": "factorial(3,6)."
+        },
+        {
+          "label": "Cero",
+          "query": "factorial(0,1)."
+        },
+        {
+          "label": "Cinco",
+          "query": "factorial(5,120)."
+        },
+        {
+          "label": "Negativo",
+          "query": "\\+ factorial(-1,_)."
+        },
+        {
+          "label": "No entero",
+          "query": "\\+ factorial(2.5,_)."
+        }
+      ],
+      "starter": "% Factorial\n% Escribí tus hechos y reglas acá.\n",
+      "variants": [
+        {
+          "label": "Con acumulador",
+          "code": "factorial(N,F) :- integer(N), N >= 0, fact_acc(N,1,F).\nfact_acc(0,A,A).\nfact_acc(N,A,F) :- N > 0, A1 is A*N, N1 is N-1, fact_acc(N1,A1,F).\n"
+        }
+      ]
+    },
+    {
+      "id": "tp2-04",
+      "group": "tp2",
+      "number": "04",
+      "title": "Dos modelos para la parrilla",
+      "topic": "Estructuras",
+      "page": 2,
+      "source": "02p-prolog.pdf",
+      "statement": "Compará escuderia(Equipo,Motor,ListaPilotos) con piloto(Nombre,Equipo,Motor,Pais). Con piloto/4 resolvé I-X: nacionalidad, motores, compañeros, pares y cantidad por motor.",
+      "solution": "piloto(norris,mclaren,mercedes,britanico).\npiloto(piastri,mclaren,mercedes,australiano).\npiloto(russell,mercedes,mercedes,britanico).\npiloto(antonelli,mercedes,mercedes,italiano).\npiloto(verstappen,redbull,redbull,neerlandes).\npiloto(hadjar,redbull,redbull,frances).\npiloto(hamilton,ferrari,ferrari,britanico).\npiloto(leclerc,ferrari,ferrari,monegasco).\npiloto(alonso,astonmartin,honda,espanol).\npiloto(stroll,astonmartin,honda,canadiense).\npiloto(alon,williams,mercedes,tailandes).\npiloto(sainz,williams,mercedes,espanol).\npiloto(hulkenberg,audi,audi,aleman).\npiloto(bortoleto,audi,audi,brasileno).\npiloto(ocon,haas,ferrari,frances).\npiloto(bearman,haas,ferrari,britanico).\npiloto(colapinto,alpine,mercedes,argentino).\npiloto(gasly,alpine,mercedes,frances).\npiloto(perez,cadillac,ferrari,mexicano).\npiloto(bottas,cadillac,ferrari,finlandes).\npiloto(lawson,racingbulls,redbull,neozelandes).\npiloto(lindblad,racingbulls,redbull,britanico).\ncompanero_de_equipo(X,Y) :- piloto(X,E,_,_), piloto(Y,E,_,_), X \\= Y.\ncompañero_de_equipo(X,Y) :- companero_de_equipo(X,Y).\nmismo_motor(X,Y) :- piloto(X,_,M,_), piloto(Y,_,M,_), X \\= Y.\nmismo_pais(X,Y) :- piloto(X,_,_,P), piloto(Y,_,_,P), X \\= Y.\nesPiloto(X) :- piloto(X,_,_,_).\nmotor_de(P,M) :- piloto(P,_,M,_).\ncantidad_por_motor([],_,0).\ncantidad_por_motor([P|Ps],M,N) :- motor_de(P,MP),\n    cantidad_por_motor(Ps,M,R), ( MP = M -> N is R+1 ; N = R ).\n",
+      "queries": [
+        "piloto(P,E,_,argentino).",
+        "setof(E,P^Pais^piloto(P,E,mercedes,Pais),Es), length(Es,N).",
+        "setof(E,P^Pais^piloto(P,E,ferrari,Pais),Es), length(Es,N).",
+        "piloto(P,E,_,britanico).",
+        "companero_de_equipo(colapinto,Y).",
+        "mismo_motor(colapinto,Y).",
+        "mismo_pais(X,Y), piloto(X,_,_,britanico).",
+        "esPiloto(X).",
+        "piloto(N,E,_,_).",
+        "motor_de(colapinto,M).",
+        "cantidad_por_motor([colapinto,hamilton,norris],mercedes,N)."
+      ],
+      "explanation": [
+        "Modelo anidado: el motor aparece una vez por equipo, agregar un piloto exige actualizar la lista, y los compañeros están agrupados. Para el motor de un piloto hay que recorrer su lista.",
+        "Modelo plano: el motor de un piloto se obtiene con una consulta; agregar un piloto es agregar un hecho. Los compañeros se obtienen compartiendo Equipo. El motor se repite por piloto y hay que mantenerlo consistente. El anidado comunica mejor la agrupación; el plano simplifica las consultas individuales.",
+        "I: colapinto en alpine. II: 4 equipos con Mercedes y 3 con Ferrari. setof elimina duplicados; P^Pais^ evita agrupar por piloto o país.",
+        "III: norris/mclaren, russell/mercedes, hamilton/ferrari, bearman/haas, lindblad/racingbulls. IV-VI: las reglas comparten equipo, motor o país; mismo_motor también incluye compañeros. Los pares británicos se generan en ambos órdenes.",
+        "VII-VIII: esPiloto/1 y piloto(N,E,_,_) enumeran los 22 pilotos. IX: Colapinto usa mercedes. X: el ejemplo devuelve 2; se supone que todos los nombres de la lista existen."
+      ],
+      "hints": [
+        "No cuentes pilotos para contar escuderías. Usá setof.",
+        "Un mismo dato se expresa compartiendo una variable."
+      ],
+      "tests": [
+        {
+          "label": "Argentino",
+          "query": "piloto(colapinto,alpine,_,argentino)."
+        },
+        {
+          "label": "Cuatro Mercedes",
+          "query": "setof(E,P^Pais^piloto(P,E,mercedes,Pais),Es),length(Es,4)."
+        },
+        {
+          "label": "Compañero",
+          "query": "findall(Y,companero_de_equipo(colapinto,Y),Ys),Ys == [gasly]."
+        },
+        {
+          "label": "Conteo",
+          "query": "cantidad_por_motor([colapinto,hamilton,norris],mercedes,2)."
+        },
+        {
+          "label": "Base conteo",
+          "query": "cantidad_por_motor([],mercedes,0)."
+        }
+      ],
+      "starter": "piloto(norris,mclaren,mercedes,britanico).\npiloto(piastri,mclaren,mercedes,australiano).\npiloto(russell,mercedes,mercedes,britanico).\npiloto(antonelli,mercedes,mercedes,italiano).\npiloto(verstappen,redbull,redbull,neerlandes).\npiloto(hadjar,redbull,redbull,frances).\npiloto(hamilton,ferrari,ferrari,britanico).\npiloto(leclerc,ferrari,ferrari,monegasco).\npiloto(alonso,astonmartin,honda,espanol).\npiloto(stroll,astonmartin,honda,canadiense).\npiloto(alon,williams,mercedes,tailandes).\npiloto(sainz,williams,mercedes,espanol).\npiloto(hulkenberg,audi,audi,aleman).\npiloto(bortoleto,audi,audi,brasileno).\npiloto(ocon,haas,ferrari,frances).\npiloto(bearman,haas,ferrari,britanico).\npiloto(colapinto,alpine,mercedes,argentino).\npiloto(gasly,alpine,mercedes,frances).\npiloto(perez,cadillac,ferrari,mexicano).\npiloto(bottas,cadillac,ferrari,finlandes).\npiloto(lawson,racingbulls,redbull,neozelandes).\npiloto(lindblad,racingbulls,redbull,britanico).\n",
+      "variants": []
+    },
+    {
+      "id": "tp2-05",
+      "group": "tp2",
+      "number": "05",
+      "title": "El rectángulo dividido",
+      "topic": "Generación y prueba",
+      "page": 3,
+      "source": "02p-prolog.pdf",
+      "statement": "Calculá el área superior derecha con lados enteros positivos a partir de las otras tres áreas. Debe fallar cuando no hay una configuración válida.",
+      "solution": "rectangulo(S1,S2,S3,S4) :-\n    integer(S1), integer(S2), integer(S3), S1>0, S2>0, S3>0,\n    % B1*H1=S1; B2*H1=S2; B1*H2=S3.\n    between(1,S1,B1), 0 is S1 mod B1,\n    H1 is S1 // B1, 0 is S2 mod H1, 0 is S3 mod B1,\n    B2 is S2 // H1, H2 is S3 // B1, S4 is B2*H2.\n",
+      "queries": [
+        "rectangulo(6,10,21,S).",
+        "rectangulo(10,6,35,S).",
+        "rectangulo(6,10,35,S).",
+        "rectangulo(4,4,4,S)."
+      ],
+      "explanation": [
+        "Compartir los lados da B1*H1=S1, B2*H1=S2 y B1*H2=S3. Se generan divisores B1 y se comprueban las otras divisibilidades.",
+        "Las respuestas son 35, 21 y false. S4=S2*S3/S1 expresa el área, pero la solución además verifica lados enteros.",
+        "Distintas configuraciones pueden devolver la misma área varias veces; setof(S,rectangulo(...,S),Ss) las agrupa. Generamos divisores de S1 para que el programa sea directo; generar desde el área mayor es otra estrategia de búsqueda válida."
+      ],
+      "hints": [
+        "Elegí una base que divida S1.",
+        "La altura inferior tiene que dividir S2 y la base izquierda tiene que dividir S3."
+      ],
+      "tests": [
+        {
+          "label": "Ejemplo 1",
+          "query": "rectangulo(6,10,21,35)."
+        },
+        {
+          "label": "Ejemplo 2",
+          "query": "rectangulo(10,6,35,21)."
+        },
+        {
+          "label": "Imposible",
+          "query": "\\+ rectangulo(6,10,35,_)."
+        },
+        {
+          "label": "No positiva",
+          "query": "\\+ rectangulo(0,2,3,_)."
+        }
+      ],
+      "starter": "% El rectángulo dividido\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "tp2-06",
+      "group": "tp2",
+      "number": "06",
+      "title": "Clasificar triángulos",
+      "topic": "Corte y aritmética",
+      "page": 3,
+      "source": "02p-prolog.pdf",
+      "statement": "Implementá triangle(+A,+B,+C,?Tipo) con tipos \"equilateral\", \"isosceles\" y \"scalene\". Validá los lados positivos y las tres desigualdades.",
+      "solution": "valido(A,B,C) :- A>0,B>0,C>0,A+B>=C,A+C>=B,B+C>=A.\ntriangle(A,B,C,\"equilateral\") :- valido(A,B,C), A=:=B, B=:=C.\ntriangle(A,B,C,\"isosceles\") :- valido(A,B,C), (A=:=B ; A=:=C ; B=:=C), !.\ntriangle(A,B,C,\"scalene\") :- valido(A,B,C), A=\\=B,A=\\=C,B=\\=C.\n",
+      "queries": [
+        "triangle(2,2,2,Tipo).",
+        "triangle(2,2,2,\"isosceles\").",
+        "triangle(3,4,4,Tipo).",
+        "triangle(5,4,6,Tipo).",
+        "triangle(1,1,3,Tipo)."
+      ],
+      "explanation": [
+        "La guía define isósceles como al menos dos lados iguales. Por eso (2,2,2) devuelve equilateral y también isosceles. Una clasificación exclusiva sería una convención diferente.",
+        "El corte de la regla isosceles evita repetir ese tipo cuando más de una igualdad se cumple. La regla scalene tiene desigualdades explícitas, por lo que sigue siendo correcta si el tipo ya está ligado.",
+        "Usamos >= tal como indica la guía: se admiten degenerados como (1,1,2). Los lados no positivos y (1,1,3) fallan. Los tipos son strings, con comillas dobles."
+      ],
+      "hints": [
+        "Validá primero si los lados pueden formar un triángulo.",
+        "Usá =:= para igualdad numérica."
+      ],
+      "tests": [
+        {
+          "label": "Equilátero",
+          "query": "triangle(2,2,2,\"equilateral\")."
+        },
+        {
+          "label": "Isósceles inclusivo",
+          "query": "triangle(2,2,2,\"isosceles\")."
+        },
+        {
+          "label": "Escaleno",
+          "query": "triangle(5,4,6,\"scalene\")."
+        },
+        {
+          "label": "Imposible",
+          "query": "\\+ triangle(1,1,3,_)."
+        },
+        {
+          "label": "Tipos sin duplicados",
+          "query": "findall(T,triangle(2,2,2,T),Ts),Ts == [\"equilateral\",\"isosceles\"]."
+        }
+      ],
+      "starter": "% Clasificar triángulos\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "tp2-07",
+      "group": "tp2",
+      "number": "07",
+      "title": "N reinas",
+      "topic": "Generación y prueba",
+      "page": 4,
+      "source": "02p-prolog.pdf",
+      "statement": "Implementá queens(+N,-Qs). La posición i de Qs indica la fila de la reina en la columna i; ninguna debe atacar a otra.",
+      "solution": "queens(N,Qs) :- integer(N), N >= 0, numlist(1,N,Rows), reinas(Rows,[],Qs).\nqueens(0,[]).\nreinas([],_,[]).\nreinas(Rows,Placed,[Q|Qs]) :- select(Q,Rows,Rest),\n    segura(Q,Placed,1), reinas(Rest,[Q|Placed],Qs).\nsegura(_,[],_).\nsegura(Q,[P|Ps],D) :- abs(Q-P) =\\= D, D1 is D+1, segura(Q,Ps,D1).\n",
+      "queries": [
+        "queens(4,Qs).",
+        "queens(8,Qs).",
+        "queens(3,Qs).",
+        "findall(Q,queens(8,Q),Qs), length(Qs,N)."
+      ],
+      "explanation": [
+        "select/3 elige una fila sin repetirla. Una reina por posición garantiza columnas distintas.",
+        "Entre la reina nueva y una anterior a D columnas de distancia no debe cumplirse abs(Q-P)=D. Si hay ataque, Prolog retrocede y prueba otra fila.",
+        "N=4 tiene [2,4,1,3] y [3,1,4,2]. N=8 tiene 92 soluciones; el orden puede diferir de los ejemplos. Para inspeccionar una traza completa conviene empezar con N=4.",
+        "El árbol registra ramas efectivamente exploradas. Una traza grande se recorta, pero las respuestas se siguen calculando dentro del límite de ejecución."
+      ],
+      "hints": [
+        "Representá las columnas con las posiciones de una lista.",
+        "La diferencia de filas no debe coincidir con la distancia de columnas."
+      ],
+      "tests": [
+        {
+          "label": "Dos soluciones de 4",
+          "query": "findall(Q,queens(4,Q),Qs),Qs == [[2,4,1,3],[3,1,4,2]]."
+        },
+        {
+          "label": "Tres no tiene",
+          "query": "\\+ queens(3,_)."
+        },
+        {
+          "label": "Una reina",
+          "query": "queens(1,[1])."
+        },
+        {
+          "label": "Ocho: 92",
+          "query": "findall(Q,queens(8,Q),Qs),length(Qs,92)."
+        },
+        {
+          "label": "Cero",
+          "query": "findall(Q,queens(0,Q),Qs),Qs == [[]]."
+        }
+      ],
+      "starter": "% N reinas\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "tp2-08",
+      "group": "tp2",
+      "number": "08",
+      "title": "Construir ecuaciones",
+      "topic": "Búsqueda y metaprogramación",
+      "page": 4,
+      "source": "02p-prolog.pdf",
+      "statement": "Insertá operadores y paréntesis entre los números sin cambiar su orden, formando equation(Lista,L,R).",
+      "solution": "conc([],L,L).\nconc([X|Xs],L,[X|Rs]) :- conc(Xs,L,Rs).\nsplit(L,A,B) :- conc(A,B,L), A = [_|_], B = [_|_].\nequation(Ns,L,R) :- split(Ns,A,B), term(A,L,VL), term(B,R,VR), VL =:= VR.\nterm([N],N,N).\nterm(Ns,E,V) :- split(Ns,A,B), term(A,EA,VA), term(B,EB,VB), binterm(EA,VA,EB,VB,E,V).\nbinterm(A,X,B,Y,A+B,V) :- V is X+Y.\nbinterm(A,X,B,Y,A-B,V) :- V is X-Y.\nbinterm(A,X,B,Y,A*B,V) :- V is X*Y.\nbinterm(A,X,B,Y,A/B,V) :- Y =\\= 0, V is X rdiv Y.\n",
+      "queries": [
+        "equation([2,3,5,7,11],L,R).",
+        "equation([2,3,5],L,R).",
+        "equation([1,0],L,R)."
+      ],
+      "explanation": [
+        "split/3 parte la lista en dos bloques no vacíos para ubicar la igualdad. term/3 genera todas las expresiones binarias posibles en cada bloque, preservando el orden.",
+        "binterm/6 combina expresión y valor. Es una variante del auxiliar binterm/3 sugerido en la guía: llevar el valor evita reevaluar y permite rechazar divisiones por cero.",
+        "La división del valor usa rdiv para comparar racionales exactos; el término mostrado usa /. Se encuentran, entre otras, 2-3+5+7=11 y 2=(3*5+7)/11. La búsqueda es combinatoria: empezá con pocos números."
+      ],
+      "hints": [
+        "Dividí la lista en el lado izquierdo y derecho.",
+        "Generá recursivamente las expresiones antes de comparar valores."
+      ],
+      "tests": [
+        {
+          "label": "Suma",
+          "query": "equation([2,3,5],2+3,5)."
+        },
+        {
+          "label": "Ejemplo racional",
+          "query": "equation([2,3,5,7,11],2,(3*5+7)/11)."
+        },
+        {
+          "label": "Ejemplo resta",
+          "query": "equation([2,3,5,7,11],2*(3-5),7-11)."
+        },
+        {
+          "label": "Sin igualdad",
+          "query": "\\+ equation([1,0],_,_)."
+        }
+      ],
+      "starter": "% Construir ecuaciones\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "control-01-suma",
+      "group": "control",
+      "number": "01",
+      "title": "suma_lista/2: dos versiones",
+      "topic": "Recursión de cola",
+      "page": 1,
+      "source": "02p-prolog (1).pdf",
+      "statement": "Ejercicio 1: clasificá la definición del TP1 y escribí la versión alternativa. Compará qué objetivos quedan pendientes.",
+      "solution": "suma_lista(L,S) :- suma_acc(L,0,S).\nsuma_acc([],A,A).\nsuma_acc([X|Xs],A,S) :- A1 is A+X, suma_acc(Xs,A1,S).\n",
+      "queries": [
+        "suma_lista([1,3,5],S)."
+      ],
+      "explanation": [
+        "La versión directa tiene una suma pendiente. El acumulador guarda la suma del prefijo ya recorrido.",
+        "La posición de cola se decide sobre los objetivos del cuerpo, no sobre el aspecto de la lista de salida. Estar en cola no garantiza memoria constante: influyen los puntos de elección y la optimización del intérprete."
+      ],
+      "hints": [
+        "Buscá si hay un objetivo ejecutado después de la llamada recursiva."
+      ],
+      "tests": [
+        {
+          "label": "Suma",
+          "query": "suma_lista([1,3,5],9)."
+        },
+        {
+          "label": "Vacía",
+          "query": "suma_lista([],0)."
+        }
+      ],
+      "starter": "% suma_lista/2: dos versiones\n% Escribí tus hechos y reglas acá.\n",
+      "variants": [
+        {
+          "label": "Original TP1",
+          "code": "suma_lista([],0).\nsuma_lista([X|Xs],S) :- suma_lista(Xs,R), S is X+R.\n"
+        }
+      ]
+    },
+    {
+      "id": "control-01-pertenece",
+      "group": "control",
+      "number": "01",
+      "title": "pertenece/2: dos versiones",
+      "topic": "Recursión de cola",
+      "page": 1,
+      "source": "02p-prolog (1).pdf",
+      "statement": "Ejercicio 1: clasificá la definición del TP1 y escribí la versión alternativa. Compará qué objetivos quedan pendientes.",
+      "solution": "pertenece(X,[X|_]).\n% Versión didáctica: la unificación X=Y queda después de la recursión.\npertenece(X,[_|Xs]) :- pertenece(Y,Xs), X=Y.\n",
+      "queries": [
+        "pertenece(X,[a,b,a])."
+      ],
+      "explanation": [
+        "La versión del TP1 ya es de cola. La alternativa mueve la unificación de X al regreso; conserva respuestas en listas finitas, pero no mejora el costo. Un acumulador no aporta nada para pertenencia.",
+        "La posición de cola se decide sobre los objetivos del cuerpo, no sobre el aspecto de la lista de salida. Estar en cola no garantiza memoria constante: influyen los puntos de elección y la optimización del intérprete."
+      ],
+      "hints": [
+        "Buscá si hay un objetivo ejecutado después de la llamada recursiva."
+      ],
+      "tests": [
+        {
+          "label": "Duplicados",
+          "query": "findall(X,pertenece(X,[a,b,a]),Xs),Xs == [a,b,a]."
+        },
+        {
+          "label": "Ausente",
+          "query": "\\+ pertenece(z,[a,b])."
+        }
+      ],
+      "starter": "% pertenece/2: dos versiones\n% Escribí tus hechos y reglas acá.\n",
+      "variants": [
+        {
+          "label": "Original TP1",
+          "code": "pertenece(X,[X|_]).\npertenece(X,[_|Xs]) :- pertenece(X,Xs).\n"
+        }
+      ]
+    },
+    {
+      "id": "control-01-conc",
+      "group": "control",
+      "number": "01",
+      "title": "conc/3: dos versiones",
+      "topic": "Recursión de cola",
+      "page": 1,
+      "source": "02p-prolog (1).pdf",
+      "statement": "Ejercicio 1: clasificá la definición del TP1 y escribí la versión alternativa. Compará qué objetivos quedan pendientes.",
+      "solution": "conc([],L,L).\nconc([X|Xs],L,[Y|Ys]) :- conc(Xs,L,Ys), X=Y.\n",
+      "queries": [
+        "conc([a,b],[c],R)."
+      ],
+      "explanation": [
+        "La versión del TP1 ya es de cola. La alternativa deja pendiente X=Y después de concatenar las colas. Mantener el patrón [Y|Ys] en la cabeza conserva la terminación de las particiones de una salida finita.",
+        "La posición de cola se decide sobre los objetivos del cuerpo, no sobre el aspecto de la lista de salida. Estar en cola no garantiza memoria constante: influyen los puntos de elección y la optimización del intérprete."
+      ],
+      "hints": [
+        "Buscá si hay un objetivo ejecutado después de la llamada recursiva."
+      ],
+      "tests": [
+        {
+          "label": "Concat",
+          "query": "conc([a,b],[c],[a,b,c])."
+        },
+        {
+          "label": "Particiones",
+          "query": "findall(A-B,conc(A,B,[a]),Ps),Ps == [[]-[a],[a]-[]]."
+        }
+      ],
+      "starter": "% conc/3: dos versiones\n% Escribí tus hechos y reglas acá.\n",
+      "variants": [
+        {
+          "label": "Original TP1",
+          "code": "conc([],L,L).\nconc([X|Xs],L,[X|Rs]) :- conc(Xs,L,Rs).\n"
+        }
+      ]
+    },
+    {
+      "id": "control-01-palindromo",
+      "group": "control",
+      "number": "01",
+      "title": "palindromo/1: dos versiones",
+      "topic": "Recursión de cola",
+      "page": 1,
+      "source": "02p-prolog (1).pdf",
+      "statement": "Ejercicio 1: clasificá la definición del TP1 y escribí la versión alternativa. Compará qué objetivos quedan pendientes.",
+      "solution": "invertir(L,R) :- invertir_acc(L,[],R).\ninvertir_acc([],A,A).\ninvertir_acc([X|Xs],A,R) :- invertir_acc(Xs,[X|A],R).\npalindromo(L) :- invertir(L,L).\n",
+      "queries": [
+        "palindromo([o,s,o])."
+      ],
+      "explanation": [
+        "palindromo/1 es un envoltorio sin recursión propia. Cambiamos su auxiliar invertir/2 por uno de cola con acumulador. Las comparaciones se refieren al auxiliar, no al envoltorio.",
+        "La posición de cola se decide sobre los objetivos del cuerpo, no sobre el aspecto de la lista de salida. Estar en cola no garantiza memoria constante: influyen los puntos de elección y la optimización del intérprete."
+      ],
+      "hints": [
+        "Buscá si hay un objetivo ejecutado después de la llamada recursiva."
+      ],
+      "tests": [
+        {
+          "label": "Sí",
+          "query": "palindromo([o,s,o])."
+        },
+        {
+          "label": "No",
+          "query": "\\+ palindromo([o,s,a])."
+        }
+      ],
+      "starter": "% palindromo/1: dos versiones\n% Escribí tus hechos y reglas acá.\n",
+      "variants": [
+        {
+          "label": "Original TP1",
+          "code": "conc([],L,L).\nconc([X|Xs],L,[X|Rs]) :- conc(Xs,L,Rs).\ninvertir([],[]).\ninvertir([X|Xs],R) :- invertir(Xs,T), conc(T,[X],R).\npalindromo(L) :- invertir(L,L).\n"
+        }
+      ]
+    },
+    {
+      "id": "control-01-duplica",
+      "group": "control",
+      "number": "01",
+      "title": "duplica/2: dos versiones",
+      "topic": "Recursión de cola",
+      "page": 1,
+      "source": "02p-prolog (1).pdf",
+      "statement": "Ejercicio 1: clasificá la definición del TP1 y escribí la versión alternativa. Compará qué objetivos quedan pendientes.",
+      "solution": "duplica([],[]).\nduplica([X|Xs],[Y,Y|Ys]) :- duplica(Xs,Ys), X=Y.\n",
+      "queries": [
+        "duplica([1,2,3],R)."
+      ],
+      "explanation": [
+        "La versión original ya es de cola. La alternativa deja pendiente X=Y después de procesar las colas. El patrón [Y,Y|Ys] conserva la estructura de salida. No todo algoritmo de cola necesita acumuladores.",
+        "La posición de cola se decide sobre los objetivos del cuerpo, no sobre el aspecto de la lista de salida. Estar en cola no garantiza memoria constante: influyen los puntos de elección y la optimización del intérprete."
+      ],
+      "hints": [
+        "Buscá si hay un objetivo ejecutado después de la llamada recursiva."
+      ],
+      "tests": [
+        {
+          "label": "Duplicar",
+          "query": "duplica([1,2,3],[1,1,2,2,3,3])."
+        },
+        {
+          "label": "Base",
+          "query": "duplica([],[])."
+        }
+      ],
+      "starter": "% duplica/2: dos versiones\n% Escribí tus hechos y reglas acá.\n",
+      "variants": [
+        {
+          "label": "Original TP1",
+          "code": "duplica([],[]).\nduplica([X|Xs],[X,X|Rs]) :- duplica(Xs,Rs).\n"
+        }
+      ]
+    },
+    {
+      "id": "control-01-cuenta",
+      "group": "control",
+      "number": "01",
+      "title": "cuentaN/3: dos versiones",
+      "topic": "Recursión de cola",
+      "page": 1,
+      "source": "02p-prolog (1).pdf",
+      "statement": "Ejercicio 1: clasificá la definición del TP1 y escribí la versión alternativa. Compará qué objetivos quedan pendientes.",
+      "solution": "cuentaN(L,N,R) :- cuenta_acc(L,N,0,R).\ncuenta_acc([],_,A,A).\ncuenta_acc([X|Xs],N,A,R) :-\n    ( X = N -> A1 is A+1 ; A1 = A ),\n    cuenta_acc(Xs,N,A1,R).\n",
+      "queries": [
+        "cuentaN([1,2,1],1,R)."
+      ],
+      "explanation": [
+        "La rama de coincidencia suma al volver. El acumulador de la alternativa contiene la cantidad vista hasta el momento.",
+        "La posición de cola se decide sobre los objetivos del cuerpo, no sobre el aspecto de la lista de salida. Estar en cola no garantiza memoria constante: influyen los puntos de elección y la optimización del intérprete."
+      ],
+      "hints": [
+        "Buscá si hay un objetivo ejecutado después de la llamada recursiva."
+      ],
+      "tests": [
+        {
+          "label": "Contar",
+          "query": "cuentaN([1,2,1],1,2)."
+        },
+        {
+          "label": "Base",
+          "query": "cuentaN([],1,0)."
+        }
+      ],
+      "starter": "% cuentaN/3: dos versiones\n% Escribí tus hechos y reglas acá.\n",
+      "variants": [
+        {
+          "label": "Original TP1",
+          "code": "cuentaN([],_,0).\ncuentaN([X|Xs],N,R) :- X = N, cuentaN(Xs,N,T), R is T+1.\ncuentaN([X|Xs],N,R) :- X \\= N, cuentaN(Xs,N,R).\n"
+        }
+      ]
+    },
+    {
+      "id": "control-01-mayor",
+      "group": "control",
+      "number": "01",
+      "title": "mayorN/3: dos versiones",
+      "topic": "Recursión de cola",
+      "page": 1,
+      "source": "02p-prolog (1).pdf",
+      "statement": "Ejercicio 1: clasificá la definición del TP1 y escribí la versión alternativa. Compará qué objetivos quedan pendientes.",
+      "solution": "mayorN(_,[],[]).\nmayorN(N,[X|Xs],R) :- X>N, mayorN(N,Xs,T), R=[X|T].\nmayorN(N,[X|Xs],R) :- X=<N, mayorN(N,Xs,R).\n",
+      "queries": [
+        "mayorN(3,[1,4,2,5],R)."
+      ],
+      "explanation": [
+        "La versión original es de cola en ambas ramas. En la alternativa, la rama que conserva X construye la salida al regresar; esa rama deja de ser de cola.",
+        "La posición de cola se decide sobre los objetivos del cuerpo, no sobre el aspecto de la lista de salida. Estar en cola no garantiza memoria constante: influyen los puntos de elección y la optimización del intérprete."
+      ],
+      "hints": [
+        "Buscá si hay un objetivo ejecutado después de la llamada recursiva."
+      ],
+      "tests": [
+        {
+          "label": "Filtrar",
+          "query": "mayorN(3,[1,4,2,5],[4,5])."
+        },
+        {
+          "label": "Base",
+          "query": "mayorN(3,[],[])."
+        }
+      ],
+      "starter": "% mayorN/3: dos versiones\n% Escribí tus hechos y reglas acá.\n",
+      "variants": [
+        {
+          "label": "Original TP1",
+          "code": "mayorN(_,[],[]).\nmayorN(N,[X|Xs],[X|Rs]) :- X > N, mayorN(N,Xs,Rs).\nmayorN(N,[X|Xs],Rs) :- X =< N, mayorN(N,Xs,Rs).\n"
+        }
+      ]
+    },
+    {
+      "id": "control-02",
+      "group": "control",
+      "number": "02",
+      "title": "Máximo con corte y negación",
+      "topic": "Corte y negación",
+      "page": 1,
+      "source": "02p-prolog (1).pdf",
+      "statement": "Implementá maximo/3 usando (a) corte y (b) negación. Probá también con el resultado ya ligado.",
+      "solution": "% Calculá primero y unificá Z después: evita el problema de maximo(2,3,2).\nmaximo(X,Y,Z) :- X>=Y, !, Z=X.\nmaximo(X,Y,Z) :- X<Y, Z=Y.\n",
+      "queries": [
+        "maximo(2,3,Z).",
+        "maximo(3,2,Z).",
+        "maximo(3,3,Z).",
+        "maximo(2,3,2)."
+      ],
+      "explanation": [
+        "El corte confirma la primera elección si X>=Y. La segunda regla tiene una condición explícita, y la unificación de Z se hace después de elegir.",
+        "La versión negada pregunta si X>=Y fracasa. Se usa con entradas numéricas ligadas; la negación no genera valores para X o Y.",
+        "La versión maximo(X,Y,X):-X>=Y,!. seguida de maximo(X,Y,Y). acepta resultados incorrectos cuando la cabeza de la primera regla no unifica. Por eso comprobamos también maximo(2,3,2)."
+      ],
+      "hints": [
+        "El corte debe aparecer después de la comparación."
+      ],
+      "tests": [
+        {
+          "label": "Máximo",
+          "query": "maximo(2,3,3),maximo(3,2,3)."
+        },
+        {
+          "label": "Empate único",
+          "query": "findall(Z,maximo(3,3,Z),Zs),Zs == [3]."
+        },
+        {
+          "label": "Resultado incorrecto",
+          "query": "\\+ maximo(2,3,2),\\+ maximo(3,2,2)."
+        }
+      ],
+      "starter": "% Máximo con corte y negación\n% Escribí tus hechos y reglas acá.\n",
+      "variants": [
+        {
+          "label": "Con negación",
+          "code": "maximo(X,Y,X) :- X>=Y.\nmaximo(X,Y,Y) :- \\+ (X>=Y).\n"
+        }
+      ]
+    },
+    {
+      "id": "control-03",
+      "group": "control",
+      "number": "03",
+      "title": "Ordenar y observar el corte",
+      "topic": "Árboles y corte",
+      "page": 1,
+      "source": "02p-prolog (1).pdf",
+      "statement": "Completá el árbol de ordenar/2 de la teoría. Incluí el auxiliar ordenada/1, que no aparece definido en el enunciado.",
+      "solution": "ordenar(L,R) :- concatenar(P,[X,Y|S],L), X>Y, !,\n    concatenar(P,[Y,X|S],NL), ordenar(NL,R).\nordenar(L,L) :- ordenada(L).\nconcatenar([],L,L).\nconcatenar([X|Y],L,[X|Z]) :- concatenar(Y,L,Z).\nordenada([]).\nordenada([_]).\nordenada([X,Y|Xs]) :- X=<Y, ordenada([Y|Xs]).\n",
+      "queries": [
+        "ordenar([3,2,1],R).",
+        "ordenar([2,1,3],R).",
+        "ordenar([1,2,3],R).",
+        "ordenar([],R)."
+      ],
+      "explanation": [
+        "concatenar/3 busca el primer par adyacente fuera de orden. X>Y tiene éxito y el corte fija ese par; luego se intercambia y se repite.",
+        "La secuencia principal para [3,2,1] es [3,2,1] → [2,3,1] → [2,1,3] → [1,2,3]. El árbol también contiene los intentos de concatenar y las comparaciones que fallan.",
+        "Al ejecutar ! se descartan alternativas del padre y de los objetivos anteriores a ese corte; las metas posteriores conservan sus propias alternativas. Los eventos Corte y Corte ejecutado marcan ese momento.",
+        "Poner un corte en concatenar([],L,L) impediría enumerar otros prefijos: si el primer par está ordenado, la búsqueda no podría encontrar una inversión más adelante. Probá [1,3,2] para observarlo."
+      ],
+      "hints": [
+        "El corte fija el primer par que viola el orden."
+      ],
+      "tests": [
+        {
+          "label": "Ordenar",
+          "query": "findall(R,ordenar([3,2,1],R),Rs),Rs == [[1,2,3]]."
+        },
+        {
+          "label": "Ya ordenada",
+          "query": "ordenar([1,2,3],[1,2,3])."
+        },
+        {
+          "label": "Inversión posterior",
+          "query": "ordenar([1,3,2],[1,2,3])."
+        },
+        {
+          "label": "Repetidos",
+          "query": "ordenar([2,1,2],[1,2,2])."
+        },
+        {
+          "label": "Vacía",
+          "query": "ordenar([],[])."
+        }
+      ],
+      "starter": "% Ordenar y observar el corte\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "tail-suma",
+      "group": "tail",
+      "number": "R",
+      "title": "Suma con acumulador",
+      "topic": "Recursión de cola",
+      "page": 15,
+      "source": "02 - Tema2Rec.pdf",
+      "statement": "Convertí suma_lista/2 a recursión de cola. Conservá la firma pública.",
+      "solution": "suma_lista(L,S) :- suma_acc(L,0,S).\nsuma_acc([],A,A).\nsuma_acc([X|Xs],A,S) :- A1 is A+X, suma_acc(Xs,A1,S).\n",
+      "queries": [
+        "suma_lista([1,3,5],S)."
+      ],
+      "explanation": [
+        "A es la suma del prefijo ya recorrido; el resultado final es A más la suma de lo que falta.",
+        "El acumulador usa una variable nueva en cada paso. A1 is A+X unifica A1; A is A+X intenta igualar el valor viejo y falla.",
+        "La llamada al auxiliar debe ser el último objetivo de la rama. El depurador de SWI desactiva la optimización de última llamada, así que la profundidad de la traza no mide el ahorro de memoria de una ejecución optimizada."
+      ],
+      "hints": [
+        "Elegí el valor inicial del acumulador: 0 para sumar o contar, 1 para multiplicar, [] para invertir.",
+        "En el caso base, el resultado es el acumulador."
+      ],
+      "tests": [
+        {
+          "label": "Ejemplo",
+          "query": "suma_lista([1,3,5],9)."
+        },
+        {
+          "label": "Vacía",
+          "query": "suma_lista([],0)."
+        },
+        {
+          "label": "Negativos",
+          "query": "suma_lista([-2,4,-1],1)."
+        }
+      ],
+      "starter": "suma_lista([],0).\nsuma_lista([X|Xs],S) :- suma_lista(Xs,R), S is X+R.\n\n% Reemplazá esta versión por una de cola con un auxiliar.\n",
+      "variants": [
+        {
+          "label": "Versión directa",
+          "code": "suma_lista([],0).\nsuma_lista([X|Xs],S) :- suma_lista(Xs,R), S is X+R.\n"
+        }
+      ]
+    },
+    {
+      "id": "tail-factorial",
+      "group": "tail",
+      "number": "R",
+      "title": "Factorial con acumulador",
+      "topic": "Recursión de cola",
+      "page": 15,
+      "source": "02 - Tema2Rec.pdf",
+      "statement": "Convertí factorial/2 usando un acumulador inicial de 1.",
+      "solution": "factorial(N,F) :- integer(N), N >= 0, fact_acc(N,1,F).\nfact_acc(0,A,A).\nfact_acc(N,A,F) :- N > 0, A1 is A*N, N1 is N-1, fact_acc(N1,A1,F).\n",
+      "queries": [
+        "factorial(5,F)."
+      ],
+      "explanation": [
+        "A contiene el producto ya recorrido; A * N! es el factorial original.",
+        "El acumulador usa una variable nueva en cada paso. A1 is A+X unifica A1; A is A+X intenta igualar el valor viejo y falla.",
+        "La llamada al auxiliar debe ser el último objetivo de la rama. El depurador de SWI desactiva la optimización de última llamada, así que la profundidad de la traza no mide el ahorro de memoria de una ejecución optimizada."
+      ],
+      "hints": [
+        "Elegí el valor inicial del acumulador: 0 para sumar o contar, 1 para multiplicar, [] para invertir.",
+        "En el caso base, el resultado es el acumulador."
+      ],
+      "tests": [
+        {
+          "label": "Cinco",
+          "query": "factorial(5,120)."
+        },
+        {
+          "label": "Cero",
+          "query": "factorial(0,1)."
+        },
+        {
+          "label": "Negativo",
+          "query": "\\+ factorial(-1,_)."
+        }
+      ],
+      "starter": "factorial(N,F) :- integer(N), N >= 0, fact(N,F).\nfact(0,1).\nfact(N,F) :- N > 0, N1 is N-1, fact(N1,R), F is N*R.\n\n% Reemplazá esta versión por una de cola con un auxiliar.\n",
+      "variants": [
+        {
+          "label": "Versión directa",
+          "code": "factorial(N,F) :- integer(N), N >= 0, fact(N,F).\nfact(0,1).\nfact(N,F) :- N > 0, N1 is N-1, fact(N1,R), F is N*R.\n"
+        }
+      ]
+    },
+    {
+      "id": "tail-invertir",
+      "group": "tail",
+      "number": "R",
+      "title": "Inversa en un recorrido",
+      "topic": "Recursión de cola",
+      "page": 15,
+      "source": "02 - Tema2Rec.pdf",
+      "statement": "Invertí una lista sin concatenar al regresar.",
+      "solution": "invertir(L,R) :- invertir_acc(L,[],R).\ninvertir_acc([],A,A).\ninvertir_acc([X|Xs],A,R) :- invertir_acc(Xs,[X|A],R).\n",
+      "queries": [
+        "invertir([a,b,c],R)."
+      ],
+      "explanation": [
+        "A es el prefijo recorrido, invertido; se agrega cada nueva cabeza al principio de A.",
+        "El acumulador usa una variable nueva en cada paso. A1 is A+X unifica A1; A is A+X intenta igualar el valor viejo y falla.",
+        "La llamada al auxiliar debe ser el último objetivo de la rama. El depurador de SWI desactiva la optimización de última llamada, así que la profundidad de la traza no mide el ahorro de memoria de una ejecución optimizada."
+      ],
+      "hints": [
+        "Elegí el valor inicial del acumulador: 0 para sumar o contar, 1 para multiplicar, [] para invertir.",
+        "En el caso base, el resultado es el acumulador."
+      ],
+      "tests": [
+        {
+          "label": "Inversa",
+          "query": "invertir([a,b,c],[c,b,a])."
+        },
+        {
+          "label": "Vacía",
+          "query": "invertir([],[])."
+        },
+        {
+          "label": "Duplicados",
+          "query": "invertir([a,a,b],[b,a,a])."
+        }
+      ],
+      "starter": "conc([],L,L).\nconc([X|Xs],L,[X|Rs]) :- conc(Xs,L,Rs).\ninvertir([],[]).\ninvertir([X|Xs],R) :- invertir(Xs,T), conc(T,[X],R).\n\n% Reemplazá esta versión por una de cola con un auxiliar.\n",
+      "variants": [
+        {
+          "label": "Versión directa",
+          "code": "conc([],L,L).\nconc([X|Xs],L,[X|Rs]) :- conc(Xs,L,Rs).\ninvertir([],[]).\ninvertir([X|Xs],R) :- invertir(Xs,T), conc(T,[X],R).\n"
+        }
+      ]
+    },
+    {
+      "id": "tail-contar",
+      "group": "tail",
+      "number": "R",
+      "title": "Contar sin operaciones pendientes",
+      "topic": "Recursión de cola",
+      "page": 15,
+      "source": "02 - Tema2Rec.pdf",
+      "statement": "Llevá la cantidad de coincidencias en un argumento adicional.",
+      "solution": "cuentaN(L,N,R) :- cuenta_acc(L,N,0,R).\ncuenta_acc([],_,A,A).\ncuenta_acc([X|Xs],N,A,R) :-\n    ( X = N -> A1 is A+1 ; A1 = A ),\n    cuenta_acc(Xs,N,A1,R).\n",
+      "queries": [
+        "cuentaN([1,2,1,1],1,N)."
+      ],
+      "explanation": [
+        "A es la cantidad de coincidencias con N dentro del prefijo recorrido.",
+        "El acumulador usa una variable nueva en cada paso. A1 is A+X unifica A1; A is A+X intenta igualar el valor viejo y falla.",
+        "La llamada al auxiliar debe ser el último objetivo de la rama. El depurador de SWI desactiva la optimización de última llamada, así que la profundidad de la traza no mide el ahorro de memoria de una ejecución optimizada."
+      ],
+      "hints": [
+        "Elegí el valor inicial del acumulador: 0 para sumar o contar, 1 para multiplicar, [] para invertir.",
+        "En el caso base, el resultado es el acumulador."
+      ],
+      "tests": [
+        {
+          "label": "Cuenta",
+          "query": "cuentaN([1,2,1,1],1,3)."
+        },
+        {
+          "label": "Ausente",
+          "query": "cuentaN([1,2],9,0)."
+        },
+        {
+          "label": "Vacía",
+          "query": "cuentaN([],1,0)."
+        }
+      ],
+      "starter": "cuentaN([],_,0).\ncuentaN([X|Xs],N,R) :- X = N, cuentaN(Xs,N,T), R is T+1.\ncuentaN([X|Xs],N,R) :- X \\= N, cuentaN(Xs,N,R).\n\n% Reemplazá esta versión por una de cola con un auxiliar.\n",
+      "variants": [
+        {
+          "label": "Versión directa",
+          "code": "cuentaN([],_,0).\ncuentaN([X|Xs],N,R) :- X = N, cuentaN(Xs,N,T), R is T+1.\ncuentaN([X|Xs],N,R) :- X \\= N, cuentaN(Xs,N,R).\n"
+        }
+      ]
+    },
+    {
+      "id": "tail-longitud",
+      "group": "tail",
+      "number": "R",
+      "title": "Longitud con acumulador",
+      "topic": "Recursión de cola",
+      "page": 15,
+      "source": "02 - Tema2Rec.pdf",
+      "statement": "Transformá la longitud directa a una versión de cola.",
+      "solution": "longitud(L,N) :- longitud_acc(L,0,N).\nlongitud_acc([],A,A).\nlongitud_acc([_|Xs],A,N) :- A1 is A+1, longitud_acc(Xs,A1,N).\n",
+      "queries": [
+        "longitud([a,b,c,d],N)."
+      ],
+      "explanation": [
+        "A cuenta los elementos ya recorridos; A + longitud(Restante) se mantiene constante.",
+        "El acumulador usa una variable nueva en cada paso. A1 is A+X unifica A1; A is A+X intenta igualar el valor viejo y falla.",
+        "La llamada al auxiliar debe ser el último objetivo de la rama. El depurador de SWI desactiva la optimización de última llamada, así que la profundidad de la traza no mide el ahorro de memoria de una ejecución optimizada."
+      ],
+      "hints": [
+        "Elegí el valor inicial del acumulador: 0 para sumar o contar, 1 para multiplicar, [] para invertir.",
+        "En el caso base, el resultado es el acumulador."
+      ],
+      "tests": [
+        {
+          "label": "Cuatro",
+          "query": "longitud([a,b,c,d],4)."
+        },
+        {
+          "label": "Vacía",
+          "query": "longitud([],0)."
+        },
+        {
+          "label": "Una",
+          "query": "longitud([a],1)."
+        }
+      ],
+      "starter": "longitud([],0).\nlongitud([_|Xs],N) :- longitud(Xs,R), N is R+1.\n\n% Reemplazá esta versión por una de cola con un auxiliar.\n",
+      "variants": [
+        {
+          "label": "Versión directa",
+          "code": "longitud([],0).\nlongitud([_|Xs],N) :- longitud(Xs,R), N is R+1.\n"
+        }
+      ]
+    },
+    {
+      "id": "concepto-aritmetica",
+      "group": "conceptos",
+      "number": "A",
+      "title": "Unificación, is y =:=",
+      "topic": "Aritmética",
+      "page": 1,
+      "source": "AritmeticaProlog_is.pdf",
+      "statement": "Compará construir una expresión, evaluarla y comprobar su valor. Este laboratorio acompaña AritmeticaProlog_is.pdf.",
+      "solution": "doble(X,Y) :- Y is 2*X.\n",
+      "queries": [
+        "X = 2+3.",
+        "X is 2+3.",
+        "2+3 =:= 5.",
+        "2+3 = 5.",
+        "3 is X+1.",
+        "X=4, X is X+1.",
+        "X=4, Y is X+1."
+      ],
+      "explanation": [
+        "= unifica términos: X=2+3 guarda una estructura. is evalúa la derecha: X=5. =:= evalúa ambos lados y compara números.",
+        "2+3=5 falla; 3 is X+1 da un error de instanciación. No hay asignación mutable: X=4, X is X+1 falla; hay que usar Y.",
+        "SWI puede imprimir 3.0 para divisiones donde la guía muestra 3. is distingue algunos tipos numéricos; =:= compara sus valores."
+      ],
+      "hints": [
+        "Para calcular, las variables de la expresión derecha deben estar ligadas."
+      ],
+      "tests": [
+        {
+          "label": "Evaluación",
+          "query": "doble(3,6)."
+        },
+        {
+          "label": "Término sin evaluar",
+          "query": "X=2+3, X \\== 5."
+        },
+        {
+          "label": "Igualdad numérica",
+          "query": "2+3 =:= 5."
+        }
+      ],
+      "starter": "% Unificación, is y =:=\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "concepto-negacion",
+      "group": "conceptos",
+      "number": "N",
+      "title": "Negación y variables libres",
+      "topic": "Negación",
+      "page": 17,
+      "source": "04 - Tema3.pdf",
+      "statement": "Compará negar una consulta con generar candidatos y negar después.",
+      "solution": "persona(ana). persona(luis). persona(maria).\naprobado(ana). aprobado(maria).\n",
+      "queries": [
+        "\\+ aprobado(luis).",
+        "\\+ aprobado(X).",
+        "persona(X), \\+ aprobado(X).",
+        "once(persona(X))."
+      ],
+      "explanation": [
+        "\\+ aprobado(X) falla porque existe al menos un X que aprueba. No enumera a quienes no aprobaron.",
+        "persona(X), \\+ aprobado(X) genera nombres primero y prueba cada uno: devuelve luis. once/1 conserva solo la primera solución.",
+        "La negación como fallo depende de que la consulta negada termine; un bucle no se transforma en una respuesta negativa."
+      ],
+      "hints": [
+        "Generá candidatos antes de negar."
+      ],
+      "tests": [
+        {
+          "label": "No aprobado",
+          "query": "persona(luis),\\+ aprobado(luis)."
+        },
+        {
+          "label": "Negación libre",
+          "query": "\\+ (\\+ aprobado(_))."
+        }
+      ],
+      "starter": "% Negación y variables libres\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "concepto-meta",
+      "group": "conceptos",
+      "number": "M",
+      "title": "call, findall, bagof y setof",
+      "topic": "Metapredicados",
+      "page": 7,
+      "source": "04s-metapredicados.pdf",
+      "statement": "Practicá llamadas a metas y recolección de soluciones. Observá duplicados y agrupaciones por variables libres.",
+      "solution": "edad(ana,25). edad(luis,30). edad(maria,25).\nes_par(N) :- 0 is N mod 2.\nmayor_que(Limite,N) :- N>Limite.\n",
+      "queries": [
+        "Meta=es_par(4), call(Meta).",
+        "call(mayor_que(5),8).",
+        "findall(E,edad(_,E),Edades).",
+        "bagof(N,edad(N,E),Nombres).",
+        "setof(E,N^edad(N,E),Edades).",
+        "findall(X,edad(X,99),Xs).",
+        "setof(X,edad(X,99),Xs).",
+        "forall(member(X,[8,10,12]),es_par(X)).",
+        "ignore(fail)."
+      ],
+      "explanation": [
+        "call/1 ejecuta una meta. call/N agrega argumentos: call(mayor_que(5),8) ejecuta mayor_que(5,8).",
+        "findall devuelve [25,30,25] y [] cuando no hay soluciones. bagof agrupa: E=25 con [ana,maria], luego E=30 con [luis].",
+        "setof ordena y elimina duplicados: [25,30]. N^ hace existencial esa variable; sin ^ se agrupa por N. bagof y setof fallan si no hay soluciones.",
+        "forall prueba una propiedad para todos los candidatos; las ligaduras internas no salen de la consulta. ignore(fail) tiene éxito."
+      ],
+      "hints": [
+        "Compará cómo manejan las variables libres y el caso sin resultados."
+      ],
+      "tests": [
+        {
+          "label": "findall",
+          "query": "findall(E,edad(_,E),Es),Es == [25,30,25]."
+        },
+        {
+          "label": "setof",
+          "query": "setof(E,N^edad(N,E),Es),Es == [25,30]."
+        },
+        {
+          "label": "call",
+          "query": "call(mayor_que(5),8)."
+        },
+        {
+          "label": "forall",
+          "query": "forall(member(X,[8,10,12]),es_par(X))."
+        }
+      ],
+      "starter": "% call, findall, bagof y setof\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    },
+    {
+      "id": "concepto-sld",
+      "group": "conceptos",
+      "number": "S",
+      "title": "Reglas, unificación y resolución SLD",
+      "topic": "Árboles",
+      "page": 10,
+      "source": "03 - Tema1IntroArboles.pdf",
+      "statement": "Seguí una consulta con dos reglas alternativas. Compará el árbol de llamadas real con la idea de un árbol SLD.",
+      "solution": "padre(juan,ana). padre(ana,luis). padre(juan,pedro).\nancestro(X,Y) :- padre(X,Y).\nancestro(X,Y) :- padre(X,Z), ancestro(Z,Y).\n",
+      "queries": [
+        "ancestro(juan,Y).",
+        "ancestro(juan,luis).",
+        "ancestro(luis,juan)."
+      ],
+      "explanation": [
+        "Un nodo SLD representa una lista de metas pendientes. Se selecciona la de más a la izquierda, se unifica con la cabeza de una cláusula renombrada y se reemplaza por su cuerpo, aplicando la sustitución al resto.",
+        "Para ancestro(juan,luis): la primera regla lleva a padre(juan,luis), que falla. La segunda produce padre(juan,Z), ancestro(Z,luis); Z=ana permite llegar a padre(ana,luis) y después a la meta vacía, éxito.",
+        "El visualizador de esta app es un árbol de llamadas del depurador, no un árbol SLD completo: muestra llamadas y alternativas visitadas, incluyendo builtins y corte. Unify muestra la cláusula elegida; Redo muestra el retroceso. Las cabezas rechazadas por el índice no aparecen como ramas separadas.",
+        "Las variables A, B… en las etiquetas son nombres locales de cada instantánea; la misma letra en dos nodos no implica identidad entre variables. Las respuestas finales conservan los nombres de tu consulta."
+      ],
+      "hints": [
+        "Probá primero una consulta concreta y después pedí todas las soluciones."
+      ],
+      "tests": [
+        {
+          "label": "Descendencia",
+          "query": "ancestro(juan,luis)."
+        },
+        {
+          "label": "Orden",
+          "query": "findall(Y,ancestro(juan,Y),Ys),Ys == [ana,pedro,luis]."
+        },
+        {
+          "label": "Sin camino",
+          "query": "\\+ ancestro(luis,juan)."
+        }
+      ],
+      "starter": "% Reglas, unificación y resolución SLD\n% Escribí tus hechos y reglas acá.\n",
+      "variants": []
+    }
+  ],
+  "materials": [
+    {
+      "file": "01p-prolog.pdf",
+      "title": "Práctico 1",
+      "description": "14 ejercicios · hechos, listas y familias",
+      "pages": 6
+    },
+    {
+      "file": "02p-prolog.pdf",
+      "title": "Práctico 2 · problemas",
+      "description": "8 ejercicios · recursión, reinas y ecuaciones",
+      "pages": 4
+    },
+    {
+      "file": "02p-prolog (1).pdf",
+      "title": "Práctico 2 · recursión y corte",
+      "description": "3 ejercicios · alternativas y árbol de ordenar",
+      "pages": 1
+    },
+    {
+      "file": "01s-intro.pdf",
+      "title": "Introducción a Prolog",
+      "description": "Presentación de la cátedra",
+      "pages": 30
+    },
+    {
+      "file": "02s-computacion.pdf",
+      "title": "Computación y resolución",
+      "description": "Unificación, búsqueda y ejecución",
+      "pages": 44
+    },
+    {
+      "file": "02 - Tema2Rec.pdf",
+      "title": "Definición recursiva de programas",
+      "description": "Listas, acumuladores y recursión de cola",
+      "pages": 20
+    },
+    {
+      "file": "03 - Tema1IntroArboles.pdf",
+      "title": "Árboles e introducción",
+      "description": "Árboles de búsqueda y resolución",
+      "pages": 24
+    },
+    {
+      "file": "03s-corte.pdf",
+      "title": "Corte y negación",
+      "description": "Control de alternativas y negación como fallo",
+      "pages": 72
+    },
+    {
+      "file": "04 - Tema3.pdf",
+      "title": "Control en programación lógica",
+      "description": "Búsqueda, cortes verdes y rojos",
+      "pages": 18
+    },
+    {
+      "file": "04s-metapredicados.pdf",
+      "title": "Tipos de predicados",
+      "description": "Lógicos, meta y extralógicos",
+      "pages": 23
+    },
+    {
+      "file": "AritmeticaProlog_is.pdf",
+      "title": "Aritmética e is",
+      "description": "Evaluación y errores frecuentes",
+      "pages": 4
+    }
+  ]
+}

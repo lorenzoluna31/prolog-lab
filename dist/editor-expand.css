@@ -1,0 +1,23 @@
+.editor-status{display:flex;gap:12px;align-items:center;min-width:0}
+.expand-editor-button{display:inline-flex;align-items:center;gap:6px;color:#a4f1df;background:#20473f;padding:6px 9px;border:1px solid #356557;border-radius:5px;font-size:12px;font-weight:600;white-space:nowrap}
+.expand-editor-button:hover{background:#2b5a50}
+.expand-editor-button svg{width:15px;height:15px;flex-shrink:0}
+body.editor-expanded{overflow:hidden}
+#editor-dialog{inset:0;margin:0;padding:0;width:100vw;max-width:none;height:100vh;height:100dvh;max-height:none;border:0;border-radius:0;background:#101c2e;color:#e2eaf7;overflow:hidden;box-shadow:none}
+#editor-dialog[open]{display:flex;flex-direction:column}
+.expanded-editor-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;padding:16px 22px;background:#142338;border-bottom:1px solid #283449}
+.expanded-editor-header h2{font-size:18px;color:#e2eaf7}
+.expanded-editor-actions{display:flex;align-items:center;gap:14px}
+.expanded-editor-actions small{font-size:13px;color:#a1b3c9}
+.expanded-editor-actions .secondary-button{font-size:14px;background:#20344b;border-color:#38536c;color:#e2eaf7}
+.expanded-editor-actions .secondary-button:hover{background:#2d465f}
+#expanded-editor-body,#editor-dialog #editor-content{display:flex;flex-direction:column;flex:1;min-height:0;min-width:0}
+#editor-dialog .editor-top,#editor-dialog .editor-bottom,#editor-dialog .query-area{flex-shrink:0}
+#editor-dialog .editor-wrap{flex:1;height:auto;min-height:100px}
+#editor-dialog .code,#editor-dialog .line-numbers{font-size:16px;line-height:1.65;padding-top:20px;padding-bottom:20px}
+#editor-dialog .line-numbers{width:54px;padding-right:12px}
+#editor-dialog .line-numbers .line{height:26.4px}
+#editor-dialog .code{padding-right:22px}
+#editor-dialog .query-area{background:#fff;color:var(--ink);padding:16px 22px max(16px,env(safe-area-inset-bottom))}
+#editor-dialog .editor-help{display:inline;font-size:12px}
+@media(max-width:640px){.editor-bottom{gap:8px;align-items:center;flex-wrap:wrap}.editor-status{gap:8px}.expanded-editor-header{padding:12px 14px}.expanded-editor-header h2{font-size:16px}.expanded-editor-actions small{display:none}.expanded-editor-actions .secondary-button{font-size:13px;padding:8px 10px}#editor-dialog .query-area{padding:12px 14px max(12px,env(safe-area-inset-bottom))}#editor-dialog .run-actions{gap:8px;margin-top:10px}#editor-dialog .editor-help{display:none}}

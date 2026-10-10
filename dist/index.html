@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Aprendé Prolog con los prácticos de Programación III, ejecución real, árboles paso a paso y recursión de cola. Sin instalaciones.">
+  <title>Prolog Lab · Programación III</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="editor-expand.css">
+  <link rel="stylesheet" href="liquid-glass.css">
+  <script src="editor-expand.js" defer></script>
+  <script src="prolog-runtime.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div id="app"><div class="loading">Preparando Prolog… La primera carga puede tardar unos segundos.</div></div>
+  <dialog id="solution-dialog" aria-labelledby="solution-title"><div class="dialog-header"><h2 id="solution-title">Solución comentada</h2><button id="close-dialog" class="icon-button" aria-label="Cerrar solución">×</button></div><div id="solution-content"></div></dialog>
+  <dialog id="editor-dialog" aria-labelledby="expanded-editor-title"><header class="expanded-editor-header"><h2 id="expanded-editor-title">Editor ampliado</h2><div class="expanded-editor-actions"><small>Esc para volver</small><button id="close-expanded-editor" class="secondary-button">Volver al ejercicio</button></div></header><div id="expanded-editor-body"></div></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
